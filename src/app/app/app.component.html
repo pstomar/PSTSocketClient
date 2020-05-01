@@ -1,0 +1,45 @@
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" [routerLink]="['/']">Poker</a>
+</nav>
+
+<!-- <router-outlet></router-outlet> -->
+<div style="height: 25px;"></div>
+<div *ngIf="!isUserLoggedin" class="card mx-auto" style="width: 20rem;">
+    <div class="card-body">
+      <h2 class="card-title">Name</h2>
+      <input [(ngModel)]="username" type="text" id="username" placeholder="Enter your name"/>
+      <button class="btn btn-primary w-25 ml-3" (click)='start()'>Start</button>
+    </div>
+</div>
+
+<div *ngIf="isUserLoggedin" class="card mx-auto" style="width: 40rem;">
+  <div class="card-body">
+    <div class="d-inline float-right mb-1">
+        <button type="button" class="btn btn-secondary btn-sm mr-1" (click)="showVote=!showVote">Show</button>
+        <button type="button" class="btn btn-secondary btn-sm mr-1" (click)="clearVote()">Clear</button>
+    </div>
+    <div [ngClass]="service.isConnected? 'green-circle':'red-circle'"></div>
+    <h2 class="card-title ml-3">{{ service.loggedUser }}</h2>
+    <table class="table">
+      <thead class="thead-light"> <tr>
+          <th>Username</th> <th>Id</th> <th>Vote</th>
+      </tr> </thead>
+      <tbody>
+        <tr *ngFor="let user of service.users | keyvalue">
+          <td>{{user.value.name}}</td>
+          <td>{{user.key}}</td>
+          <td class="align-top">
+            <span *ngIf="showVote && user.value.vote">{{user.value.vote}}</span>
+            <mat-icon *ngIf="!user.value.vote" color="primary">hourglass_empty</mat-icon>
+            <mat-icon *ngIf="!showVote && user.value.vote" color="secondary">done</mat-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+      <div *ngFor="let button of buttons" class="btn-group mr-2" role="group">
+        <button type="button" [ngClass]="{ 'active': button===selectedButton }" class="btn btn-secondary btn-sm mt-2" (click)="vote(button)">{{button}} stories</button>
+      </div>
+    </div>
+  </div>
+</div>
